@@ -13,13 +13,13 @@ import { SunIcon, MoonIcon, SunMoon } from "lucide-react";
 
 const ModeToggle = () => {
 
+    const { theme, setTheme } = useTheme();
     // Hydration error fix along with the supressHydrationWarning attribute in the layout
     const [mounted, setMounted] = useState(false);
     useEffect(() => setMounted(true), []);
     if (!mounted) return null;
     //End of hydration error fix
 
-    const { theme, setTheme } = useTheme();
     return ( 
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
