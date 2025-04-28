@@ -5,12 +5,21 @@ import Image from "next/image";
 import Link from "next/link";
 
 import CredentialsSignInForm from "./credentials-signin-form";
+import {auth} from '@/auth';
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
     title: "Sign In"
 }
 
-const SignInPage = () => {
+const SignInPage = async () => {
+    //this is how to get session information in a server component.. it's different in a client
+    const session = await auth();
+    //if we're logged in..
+    if (session) {
+        return redirect('/');
+    }
+
     return ( 
     <div className="w-full max-w-md mx-auto">
         <Card>
