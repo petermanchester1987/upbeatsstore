@@ -4,6 +4,8 @@ import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 
+import CredentialsSignInForm from "./credentials-signin-form";
+
 export const metadata: Metadata = {
     title: "Sign In"
 }
@@ -20,7 +22,7 @@ const SignInPage = () => {
             <CardDescription className="text-center">Sign in to your account</CardDescription>
            </CardHeader> 
            <CardContent className="space-y-4">
-            {/*form goes here */}
+            <CredentialsSignInForm />
            </CardContent>
         </Card>
     </div>);
