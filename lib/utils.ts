@@ -26,6 +26,7 @@ export function formatError(error: any) {
     );
 
     return fieldErrors.join('. ');
+    
   } else if (
     error.name === 'PrismaClientKnownRequestError' &&
     error.code === 'P2002'
