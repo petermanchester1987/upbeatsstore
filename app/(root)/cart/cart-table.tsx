@@ -3,7 +3,7 @@ import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { useTransition } from 'react';
 import { addItemToCart, removeItemFromCart } from '@/lib/actions/cart.actions';
-import { ArrowRight, Link, Loader, Minus, Plus } from 'lucide-react';
+import { ArrowRight, Loader, Minus, Plus } from 'lucide-react';
 import {Cart} from '@/types';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -55,22 +55,40 @@ const CartTable = ( {cart}: {cart?: Cart}) => {
                                                     toast.error(res!.message);
                                                     return;
                                                 }
-                                        })}>
-                                        {
+                                            })}>
+                                            {
+                                                isPending ? (
+                                                    <Loader className='h-4 w-4 animate-spin' />
+                                                    ) : (
+                                                    <Minus className='h-4 w-4'/>
+                                                )}
+                                        </Button>
+                                        <span>{item.qty}</span>
+                                        <Button disabled={isPending} variant='outline' type='button'
+                                            onClick= { () => startTransition( async () => {
+                                                const res =await addItemToCart(item);
+
+                                                if (!res!.success) {
+                                                    toast.error(res!.message);
+                                                    return;
+                                                }
+                                            })}>
+                                            {
                                             isPending ? (
-                                            <Loader className='h-4 w-4 animate-spin' />
-                                        ) : (
-                                        <Minus className='h-4 w-4'/>
-                                    )
-                                        }
+                                                <Loader className='h-4 w-4 animate-spin' />
+                                                ) : (
+                                                <Plus className='h-4 w-4'/>
+                                            )}
                                         </Button>
                                     </TableCell>
-
                                 </TableRow>
+                            ))}
+                        </TableBody>
                     </Table>
-                    </div>
+                </div>
             </div>
-        )}
+        )
+        }
         </>
     );
 }
