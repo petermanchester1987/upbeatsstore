@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import * as z from "zod";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -19,13 +20,17 @@ export function formatNumberWithDecimal (num: number ) : string {
 // Format errors
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function formatError(error: any) {
-  if (error.name === 'ZodError') {
+  if(error instanceof z.ZodError){
+      const treeZodError = z.treeifyError(error);
+      const prettyZodError = z.prettifyError(error);
+      console.log('Treeified errors: ', treeZodError);
+      console.log('Prettified errors: ', prettyZodError);
     // Handle Zod error
-    const fieldErrors = Object.keys(error.errors).map(
-      (field) => error.errors[field].message
-    );
+    // const fieldErrors = Object.keys(error.errors).map(
+    //   (field) => error.errors[field].message
+    // );
 
-    return fieldErrors.join('. ');
+    // return fieldErrors.join('. ');
     
   } else if (
     error.name === 'PrismaClientKnownRequestError' &&
@@ -34,6 +39,11 @@ export function formatError(error: any) {
     // Handle Prisma error
     const field = error.meta?.target ? error.meta.target[0] : 'Field';
     return `${field.charAt(0).toUpperCase() + field.slice(1)} already exists`;
+  
+  } else if ( error.name === "CredentialsSignin" || error.name === "CallbackRouteError") {
+    
+      return error.message || 'Something with the credentials';
+
   } else {
     // Handle other errors
     return typeof error.message === 'string'
@@ -51,5 +61,23 @@ export function round2(value: number | string ): number {
     return Math.round((Number(value) + Number.EPSILON) * 100) / 100;
   } else {
     throw new Error('Value is not a number or string');
+  }
+}
+
+ const CURRENCY_FORMATTER = new Intl.NumberFormat('en-GB', {
+  currency: 'GBP',
+  style: 'currency',
+  minimumFractionDigits: 2,
+});
+
+// Format currency using the currency formatter above
+
+export function formatCurrency(amount: number | string | null)  {
+  if (typeof amount === 'number') {
+    return CURRENCY_FORMATTER.format(amount);
+  } else if (typeof amount === 'string') {
+    return CURRENCY_FORMATTER.format(Number(amount));
+  } else {
+    return 'Nan';
   }
 }
