@@ -11,6 +11,8 @@ import * as z from "zod"
 import { shippingAddressDefaultValues } from '@/lib/constants';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { ArrowRight, Loader } from 'lucide-react';
 
 const ShippingAddressForm = ({address} : {address: ShippingAddress}) => {
 
@@ -23,7 +25,8 @@ const ShippingAddressForm = ({address} : {address: ShippingAddress}) => {
     defaultValues: address || shippingAddressDefaultValues
   });
 
-  const onSubmit = () => {
+  const onSubmit = (values) => {
+    console.log(values)
     return;
     }
 
@@ -66,6 +69,37 @@ const ShippingAddressForm = ({address} : {address: ShippingAddress}) => {
                             <FormMessage />
                         </FormItem>
                     )} />
+                </div>
+                <div className="flex flex-col md:flex-row gap-5">
+                    <FormField control={form.control} name="postalCode" render={({ field }: {field: ControllerRenderProps<z.infer<typeof shippingAddressSchema>, 'postalCode'>}) => (
+                        <FormItem className='w-full'>
+                            <FormLabel>Postal Code</FormLabel>
+                            <FormControl>
+                                <Input placeholder="Enter Postal Code" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )} />
+                </div>
+                <div className="flex flex-col md:flex-row gap-5">
+                    <FormField control={form.control} name="country" render={({ field }: {field: ControllerRenderProps<z.infer<typeof shippingAddressSchema>, 'country'>}) => (
+                        <FormItem className='w-full'>
+                            <FormLabel>Country</FormLabel>
+                            <FormControl>
+                                <Input placeholder="Enter Country" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )} />
+                </div>
+                <div className="flex gap-2">
+                    <Button type="submit" disabled={isPending}>
+                        { isPending ? (
+                            <Loader className='w-4 h-4 animate-spin' />
+                        ) : (
+                            <ArrowRight className='w-4 h-4' />
+                        )} Continue
+                    </Button>
                 </div>
             </form>
         </Form>
